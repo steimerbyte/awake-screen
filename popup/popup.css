@@ -1,0 +1,207 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b1220;
+  --line: #1e2b42;
+  --text: #e6edf7;
+  --muted: #8b9bb4;
+  --accent: #22d3ee;
+  --track: #2a3a55;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  flex: none;
+  border-radius: 7px;
+}
+
+.head-text {
+  min-width: 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sub {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Rows */
+
+main {
+  padding: 4px 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 16px;
+}
+
+.label {
+  min-width: 0;
+}
+
+.label label,
+.host {
+  display: block;
+  font-size: 13px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label label {
+  cursor: pointer;
+}
+
+.host {
+  font-weight: 500;
+}
+
+.label small {
+  display: block;
+  margin-top: 1px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--muted);
+  white-space: normal;
+}
+
+.note {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.divider {
+  margin: 8px 16px;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* Current-site row when the tab URL is unreadable */
+
+.row.inert .host {
+  color: #6b7a90;
+}
+
+/* Advanced block dims while the master switch is off, but stays operable */
+
+.advanced {
+  transition: opacity 120ms linear;
+}
+
+body.off .advanced {
+  opacity: 0.45;
+}
+
+/* Switch: real checkbox, label is the hit area, track and knob are siblings */
+
+.switch {
+  flex: none;
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.track {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--track);
+  border-radius: 11px;
+  transition: background 120ms linear;
+  pointer-events: none;
+}
+
+.knob {
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #9fb0c8;
+  transition: transform 120ms ease, background 120ms linear;
+}
+
+.switch input:checked + .track {
+  background: var(--accent);
+}
+
+.switch input:checked + .track .knob {
+  transform: translateX(16px);
+  background: #072230;
+}
+
+.switch input:focus-visible + .track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.switch input:disabled {
+  cursor: not-allowed;
+}
+
+.switch input:disabled + .track {
+  opacity: 0.4;
+}
+
+/* Footer */
+
+.foot {
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}

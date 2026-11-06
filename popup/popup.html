@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Awake Screen</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<header class="head">
+  <img class="logo" src="../icons/32.png" width="32" height="32" alt="">
+  <div class="head-text">
+    <h1>Awake Screen</h1>
+    <p class="sub">Keeps media playing with the screen off</p>
+  </div>
+</header>
+
+<main>
+  <div class="row">
+    <div class="label">
+      <label for="enabled">Protect all sites</label>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="enabled" role="switch">
+      <span class="track"><span class="knob"></span></span>
+    </label>
+  </div>
+
+  <div class="row" id="siteRow">
+    <div class="label">
+      <span class="host" id="siteHost">This page</span>
+      <span class="note" id="siteNote" hidden>not applicable on this page</span>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="siteOff" role="switch" aria-label="Turn protection off for this site">
+      <span class="track"><span class="knob"></span></span>
+    </label>
+  </div>
+
+  <hr class="divider">
+
+  <div class="advanced" id="advanced">
+    <div class="row">
+      <div class="label">
+        <label for="strictFocus">Hide focus and blur</label>
+        <small>Drops the page's blur and visibility events.</small>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="strictFocus" role="switch">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="label">
+        <label for="resumeGuard">Resume paused media</label>
+        <small>Restarts playback that stops on its own.</small>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="resumeGuard" role="switch">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="label">
+        <label for="batterySpoof">Report full battery</label>
+        <small>Players see a charged, plugged-in device.</small>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="batterySpoof" role="switch">
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">Applied to open tabs immediately. Version <span id="version"></span></footer>
+
+<script src="popup.js"></script>
+</body>
+</html>

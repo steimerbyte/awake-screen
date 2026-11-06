@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Awake Screen — visibility probe</title>
+<style>
+  body { margin: 0; padding: 32px; background: #0b1220; color: #e2e8f0;
+         font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  h1 { font-size: 16px; color: #22d3ee; margin: 0 0 4px; }
+  p  { color: #94a3b8; margin: 0 0 24px; }
+  pre { background: #111c2e; border: 1px solid #1e2d44; border-radius: 8px;
+        padding: 16px; white-space: pre-wrap; }
+  canvas, video { position: fixed; right: 8px; bottom: 8px; width: 96px; height: 54px;
+                  opacity: .35; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>visibility probe</h1>
+<p>Measures what this page can learn about its own visibility. Driven by <code>test/verify.mjs</code>.</p>
+<pre id="out">booting…</pre>
+<canvas id="src" width="64" height="36"></canvas>
+<video id="vid" muted playsinline></video>
+<script>
+// The probe simulates a streaming site: it pauses its own media as soon as it
+// observes a visibility change. Everything it can observe is counted, so the
+// harness can see whether the extension denied the site that observation.
+window.__vc = 0;
+window.__winBlur = 0;
+window.__focusOut = 0;
+
+const vid = document.getElementById('vid');
+const src = document.getElementById('src');
+const ctx = src.getContext('2d');
+ctx.fillStyle = '#22d3ee';
+ctx.fillRect(0, 0, 64, 36);
+
+// A real file-backed media element, so "still playing" is measurable as an
+// advancing currentTime and not merely as a false `paused` flag.
+vid.loop = true;
+vid.src = '/loop.webm';
+const started = vid.play();
+
+window.__timeline = [];
+const t0 = performance.now();
+for (const type of ['play', 'playing', 'pause', 'waiting', 'stalled', 'suspend', 'ended', 'abort', 'error']) {
+  vid.addEventListener(type, () => {
+    window.__timeline.push(type + '@' + Math.round(performance.now() - t0));
+    if (type === 'pause') window.__pauses = (window.__pauses || 0) + 1;
+  });
+}
+document.addEventListener('visibilitychange', () => {
+  window.__vc++;
+  vid.pause();
+});
+document.addEventListener('webkitvisibilitychange', () => { window.__vc++; });
+window.addEventListener('blur', (e) => {
+  if (e.target === window) { window.__winBlur++; vid.pause(); }
+});
+document.addEventListener('focusout', (e) => {
+  if (e.target === document) { window.__focusOut++; }
+});
+
+window.__snapshot = () => {
+  const d = document;
+  const getter = d.__lookupGetter__('hidden');
+  return {
+    visibilityState: d.visibilityState,
+    webkitVisibilityState: d.webkitVisibilityState,
+    hidden: d.hidden,
+    webkitHidden: d.webkitHidden,
+    hasFocus: d.hasFocus(),
+    wasDiscarded: d.wasDiscarded,
+    vcFired: window.__vc,
+    winBlurFired: window.__winBlur,
+    focusOutFired: window.__focusOut,
+    getterLooksNative: typeof getter === 'function' && /\[native code\]/.test(String(getter)),
+    awake: Boolean(window.__AWAKE__),
+    awakeVersion: window.__AWAKE__ && window.__AWAKE__.version,
+    realHidden: window.__AWAKE__ ? window.__AWAKE__.realHidden() : null,
+    realVisibilityState: window.__AWAKE__ ? window.__AWAKE__.realVisibilityState() : null,
+    videoPaused: vid.paused,
+    videoTime: Number(vid.currentTime.toFixed(2)),
+    videoReadyState: vid.readyState,
+    pauseEvents: window.__pauses || 0,
+    timeline: window.__timeline.join(' '),
+    battery: null
+  };
+};
+
+window.__readBattery = async () => {
+  try {
+    const b = await navigator.getBattery();
+    // No JSON round-trip here: Infinity must stay Infinity.
+    return { charging: b.charging, level: b.level, dischargingTime: String(b.dischargingTime),
+             chargingTime: String(b.chargingTime) };
+  } catch (e) {
+    return { error: String(e) };
+  }
+};
+
+started.then(
+  () => { document.getElementById('out').textContent = 'media playing: ' + !vid.paused; },
+  (e) => { document.getElementById('out').textContent = 'media play failed: ' + e; }
+);
+</script>
+</body>
+</html>

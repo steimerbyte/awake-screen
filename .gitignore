@@ -1,0 +1,13 @@
+# Secrets
+.env
+.env.*
+*.keystore
+*.jks
+keystore.properties
+
+# Extension signing key: pins the extension ID, never published
+key.pem
+*.pem
+
+# Build output
+dist/

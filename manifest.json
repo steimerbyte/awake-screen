@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Awake Screen — keep media playing",
+  "version": "1.0.0",
+  "description": "Hides page-visibility and focus state from websites so video and audio keep playing while the screen is off or in the background.",
+  "minimum_chrome_version": "111",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7bnZcBtWzD0J4nE1QEEKAd1wisAeAKCoi8Cq1Cj94m4DdKueFVoj6vxlo0ndUS4JTFD/C7zPTdfUu+IlbZzGuuWRUnDNXVB4NFEOB/Tb7INL5FI3H4WSWRDDiZe78UtrxMciOLjDPpzVwx4OB0A/mu3C7TS1zy7C9aj4oUDQ6bjXjEa5aAs8Z9VKkisURNjjj8/hPk1X6mITPLbUoXoNr/M7cCjR72iOsMm2ZAljbiVljOK1M4JMoOfbv9eyA4H/z7+8DXA20VsDNPSxC/9R45cpYMr+wamPKzCYsAavMldpgJsYqapz1zv4m2qHkJVdw4IwLbaS8q3w4GynJ1ndGQIDAQAB",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "action": {
+    "default_title": "Awake Screen",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/bridge.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/main-world.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "world": "MAIN"
+    }
+  ]
+}
